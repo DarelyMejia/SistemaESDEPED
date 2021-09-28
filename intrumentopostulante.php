@@ -1,17 +1,8 @@
 <?php
 require 'conexion.php';
-
-//p para buscar los datos de una tabla y mostrarlos
-$where = "";
-if (!empty($_POST)) {
-    $valor = $_POST['campo'];
-    if (!empty($valor)) {
-        $where = "WHERE nombreExpediente LIKE '%$valor%' AND idExpediente ='$idExpediente '";
-    }
-}
-$sql = "SELECT * FROM expediente $where";
-$resultado4 = $mysqli->query($sql);
-
+//Para mostrar los elementos de un select
+$sql2 = "SELECT idInstrumentosRubros, nombreInstrumentosRubros FROM instrumentosrubros ORDER BY nombreInstrumentosRubros";
+$result = $mysqli->query($sql2);
 
 ?>
 <!DOCTYPE html>
@@ -34,6 +25,7 @@ $resultado4 = $mysqli->query($sql);
     <meta http-equiv="Pragma" content="no-cache">
 
 
+
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="generator" content="2017.0.0.363" />
     <meta charset="UTF-8">
@@ -46,13 +38,15 @@ $resultado4 = $mysqli->query($sql);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        //Estos script son para las consultas con ajax 
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"> </script>
+    <script src="jquery.js"> </script>
 
 
 
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="css/site_global.css?crc=3968863445" />
-    <link rel="stylesheet" type="text/css" href="css/master_master-postulante.css?crc=4125145744" />
-    <link rel="stylesheet" type="text/css" href="css/expediente-postulante.css?crc=4089912799" id="pagesheet" />
 
 
     <script type="text/javascript">
@@ -62,12 +56,16 @@ $resultado4 = $mysqli->query($sql);
         // Check that all required assets are uploaded and up-to-date
         if (typeof Muse == "undefined") window.Muse = {};
         window.Muse.assets = {
-            "required": ["museutils.js", "museconfig.js", "jquery.watch.js", "require.js", "expediente-postulante.css"],
+            "required": ["museutils.js", "museconfig.js", "jquery.watch.js", "require.js", "intrumentopostulante.css"],
             "outOfDate": []
         };
     </script>
 
-    <title>Expediente Postulante</title>
+    <title>IntrumentoPostulante</title>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/site_global.css?crc=3968863445" />
+    <link rel="stylesheet" type="text/css" href="css/master_master-postulante.css?crc=4125145744" />
+    <link rel="stylesheet" type="text/css" href="css/intrumentopostulante.css?crc=339398726" id="pagesheet" />
 
 </head>
 
@@ -102,7 +100,7 @@ $resultado4 = $mysqli->query($sql);
                         <!-- content -->
                         <p>Perfil</p>
                     </div>
-                    <a class="nonblock nontext MuseLinkActive clearfix grpelem" id="u3036-4" href="expediente-postulante.php">
+                    <a class="nonblock nontext clearfix grpelem" id="u3036-4" href="expediente-postulante.php">
                         <!-- content -->
                         <p>Expediente</p>
                     </a>
@@ -121,104 +119,147 @@ $resultado4 = $mysqli->query($sql);
             <div id="u3691">
                 <!-- group -->
                 <div class="clearfix" id="u3691_align_to_page">
-                    <div class="clearfix grpelem" id="u3486-4">
+                    <div class="clearfix grpelem" id="u4065-4">
                         <!-- content -->
-                        <p>Lista de Expedientes</p>
+                        <p>Instrumento</p>
                     </div>
                 </div>
             </div>
         </div>
-        <form class="form-horizontal" action="guardar_expediente-postulante.php" method="POST" enctype="multipart/form-data" autocomplete="on" name="form">
+        <script type="text/javascript" src="scripts/SelecDefinidaInstru.js"> </script>
+        <script type="text/javascript" src="scripts/SelecDefinidaInstru1.js"> </script>
+        <script type="text/javascript" src="scripts/SelecDefinidaInstru2.js"> </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"> </script>
+        <script type="text/javascript">
+            //Para obtener el 2do select option 
+            $(document).ready(function() {
+                $('#rubro').on('change', function() {
+                    var rubros = $(this).val();
+            
+                    if (rubros) {
+                        $.ajax({
+                            data: 'idInstrumentosRubros=' + rubros,
+                            url: 'getCategoria.php',
+                            type: 'POST',
+                            success: function(html) {
+                                $('#categoria').html(html);
+                                $('#subcategoria').html('<option value="">Select categoria</option>');
+                            },
+                        });
+                    } else {
+                        $('#categoria').html('<option value="">Select rubro</option>');
+                        $('#subcategoria').html('<option value="">Select subcategoria</option>');
+                    }
 
-            <div class="colelem" id="u3037">
+                });
+                //para obtener el 3er select option
+                $('#categoria').on('change', function() {
+                    var categorias = $(this).val();
+                    if (categorias) {
+                        $.ajax({
+                            data: 'idCategorias=' + categorias,
+                            url: 'getCategoria.php',
+                            type: 'POST',
+                            success: function(html) {
+                                $('#subcategoria').html(html);
+                            },
+                        });
+                    } else {
+                        $('#subcategoria').html('<option value="">Select categoria</option>');
+                    }
+
+                });
+
+            });
+        </script>
+
+        <div class="clearfix colelem" id="pu3037">
+            <!-- group -->
+            <div class="grpelem" id="u3037">
                 <!-- content -->
             </div>
-            <div class="clearfix colelem" id="u5001-4">
+            <div class="clearfix grpelem" id="u4068-4">
                 <!-- content -->
-                <p>Nombre del documento</p>
+                <p>Rubro:</p>
             </div>
-            <div class="clearfix colelem" id="u5044-4">
+            <div class="grpelem" id="u4069">
+                <!-- custom html -->
+                <select name="rubro" onchange="seleccInstru()" class="btn btn-danger dropdown-toggle" size="0" id="rubro">
+                    <option selected="selected" value="">Seleccione </option>
+                    <?php
+                    if ($result > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<option value=" . $row["idInstrumentosRubros"] . ">" . $row["nombreInstrumentosRubros"] . "</option>";
+                        }
+                    } else {
+                        echo '<option value="">Rubros no valido</option>';
+                    }
+                    mysqli_free_result($result);
+                    ?>
+                </select>
+
+            </div>
+            <div class="clearfix grpelem" id="u4070-4">
                 <!-- content -->
-                <div class="form-group">
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombreExpediente" name="nombreExpediente" required>
-                    </div>
-                </div>
+                <p>Categoría:</p>
             </div>
-            <input type="hidden" id="idExpediente" name="idExpediente" value="<?php echo $row['idExpediente']; ?>" />
+            <div class="grpelem" id="u4071">
+                <!-- custom html -->
+                <select name="categoria" id="categoria" onchange="seleccInstru1()" class="btn btn-danger dropdown-toggle">
+                    <option value="">Seleccione </option>
+                </select>
 
-            <div class="clearfix colelem" id="pu5008">
-                <!-- group -->
-                <div class="grpelem" id="u5008">
-                    <!-- custom html -->
-                    <div class="grpelem" id="u3660">
-                        <!-- custom html -->
-                        <label for="fileField">Documento (pdf de Expediente):</label>
-                        <input type="file" class="form-control" name="documentoExpediente" id="fileField" accept="application/pdf" required>
-
-                    </div>
-
-                </div>
-                <div class="Button rounded-corners clearfix grpelem" id="buttonu5013">
-                    <button type="submit" class="Button rounded-corners clearfix colelem">
-                        <!-- container box -->
-                        <div class="clearfix grpelem" id="u5014-4">
-                            <!-- content -->
-                            <p>Agregar</p>
-                        </div>
-                    </button>
-                </div>
             </div>
-        </form>
-        <div class="colelem" id="u3493">
-            <!-- custom html -->
-            <div class="row table-responsive">
-                <table class="table table-striped" width="852" height="100">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <!--  <th>id Usuario</th> -->
-                            <th>nombreExpediente</th>
-                            <th>Ver</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = $resultado4->fetch_array(MYSQLI_ASSOC)) { ?>
+            <div class="clearfix grpelem" id="u4072-4" >
+                <!-- content -->
+                <p>Sub Categorías:</p>
+            </div>
+            <div class="grpelem" id="u4073">
+                <!-- custom html -->
+                <select name="subcategoria" id="subcategoria" onchange="seleccInstru2()" class="btn btn-danger dropdown-toggle">
+                    <option value="">Seleccione </option>
+
+                </select>
+            </div>
+           
+            
+            <div class="grpelem" id="u4092">
+                <!-- custom html -->
+                <div class="row table-responsive">
+                    <table class="table table-striped" width="1132" height="100">
+                        <thead>
                             <tr>
-                                <td><?php echo $row['idExpediente']; ?></td>
-                                <!--    <td><? //php// echo $row['Usuarios_idUsuarios']; 
-                                            ?></td> -->
-                                <td><?php echo $row['nombreExpediente']; ?></td>
-                                <td> <a href="mostrarVer.php?id=<?php echo $row['idExpediente']; ?>" class="btn btn-outline-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
-                                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-                                        </svg></span></a>
-                                </td>
-                                </td>
-                                <td><a href="modificaciondocumento.php?id=<?php echo $row['idExpediente']; ?>" class="btn btn-outline-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                        </svg></span></a>
-                                    <a href="borrar.php?id=<?php echo $row['idExpediente']; ?>" class="btn btn-outline-danger"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dash-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                            <path fill-rule="evenodd" d="M3.5 8a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.5-.5z" />
-                                        </svg></a>
-                                </td>
+                                <th width="182" scope="col">Item</th>
+                                <th width="193" scope="col">Definicion</th>
+                                <th width="168" scope="col">Comprobante </th>
+                                <th width="116" scope="col">Unidades </th>
+                                <th width="120" scope="col">Puntuaje de unidad </th>
+                                <th width="120" scope="col">Puntos Obtenidos </th>
+                                <th width="313" scope="col">Subir Archivo </th>
+                                <th width="313" scope="col">Ver Archivo </th>
+                                <th width="120" scope="col">Estatus </th>
                             </tr>
-                        <?php } ?>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        <tbody id="anss">
 
-        </div>
-        <a class="nonblock nontext Button rounded-corners clearfix colelem" id="buttonu3490" href="inicio-secretaria.html">
-            <!-- container box -->
-            <div class="clearfix grpelem" id="u3491-4">
-                <!-- content -->
-                <p>Regresar</p>
+                        </tbody>
+                        </thead>
+                    </table>
+                </div>
+
             </div>
-        </a>
+            
+          
+        </div>
+
+
+
+        <div class="Button rounded-corners clearfix colelem" id="buttonu4115">
+            <!-- container box -->
+            <div class="clearfix grpelem" id="u4116-4">
+                <!-- content -->
+                <p>Continuar</p>
+            </div>
+        </div>
         <div class="browser_width colelem" id="u3694-bw">
             <div id="u3694">
                 <!-- group -->

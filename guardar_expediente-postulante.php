@@ -59,5 +59,5 @@ if (isset($_POST["nombreExpediente"])) {
     </html>
 <?php } else {
     echo '<div class="alert alert-denger">Valida tus datos</div>';
-}
-
+}?>
+<META HTTP-EQUIV="REFRESH" CONTENT="2;URL=expediente-postulante.php">
